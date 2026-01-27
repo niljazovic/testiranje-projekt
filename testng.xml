@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="UI Test Framework Suite" parallel="false">
+    <test name="UI Tests">
+        <classes>
+            <class name="hr.ferit.framework.tests.LoginTests"/>
+            <class name="hr.ferit.framework.tests.CheckboxesTests"/>
+            <class name="hr.ferit.framework.tests.DynamicLoadingTests"/>
+            <class name="hr.ferit.framework.api.tests.PostsApiTests"/>
+        </classes>
+    </test>
+</suite>
