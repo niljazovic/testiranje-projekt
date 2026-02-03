@@ -1,133 +1,147 @@
-# Automated Testing Framework – Selenium & REST API
+# Automatizirano testiranje – DemoQA
 
-## Opis projekta
+Ovaj projekt predstavlja okvir (framework) za automatizirano testiranje korisničkog sučelja (UI), izrađen u sklopu kolegija iz testiranja programske podrške.
 
-Ovaj projekt predstavlja **okvir (framework) za automatsko testiranje programske podrške**, izrađen u sklopu kolegija *Metode i tehnike testiranja programske podrške*.
+Testovi su razvijeni nad javno dostupnom demo aplikacijom [demoqa.com](https://demoqa.com) s ciljem demonstracije tehnika automatiziranog testiranja, arhitekture testnog frameworka i rada sa Selenium WebDriverom i TestNG-om.
 
-Framework objedinjuje:
-- **automatsko testiranje web korisničkog sučelja (UI)** korištenjem Selenium WebDrivera
-- **automatsko testiranje REST API-ja** korištenjem REST Assured biblioteke
-- **kontinuiranu integraciju (CI)** putem GitHub Actions
+---
 
-Projekt je izrađen u programskom jeziku **Java**, uz korištenje **Maven** alata za upravljanje ovisnostima i **TestNG** okvira za izvođenje testova.
+## Napomena o stabilnosti testova
+
+Aplikacija DemoQA je demonstracijska (demo) aplikacija i poznata je po povremenoj nestabilnosti.
+
+Zbog toga:
+
+- during pokretanja cijelog testnog paketa može povremeno pasti manji broj testova
+- isti testovi u pravilu prolaze kada se pokreću pojedinačno
+- padovi testova najčešće su uzrokovani:
+    - privremenim mrežnim problemima (network error)
+    - sporim ili nepotpunim učitavanjem stranice
+    - dinamičkim sadržajem i preklapajućim (overlay) elementima
+    - headless načinom rada preglednika
+
+Ovo ponašanje je očekivano za demo aplikaciju i nije pokazatelj loše implementacije testova, već realan primjer problema s kojima se susreće UI automatizacija.
 
 ---
 
 ## Korištene tehnologije i alati
 
-- Java (JDK 17)
+- Java 21
+- Selenium WebDriver 4
+- TestNG
 - Maven
-- Selenium WebDriver
-- TestNG
-- REST Assured
 - WebDriverManager
-- Git & GitHub
-- GitHub Actions (CI)
-- Chromium / Firefox (za UI testove)
+- Firefox (primarni preglednik)
+- Chromium (lokalno, po potrebi)
+- CI/CD Actions
+- Git i GitHub
 
 ---
 
-## Struktura projekta
+## Arhitektura projekta
+
+Projekt je implementiran prema Page Object Model (POM) arhitekturnom obrascu, čime se odvaja testna logika od UI implementacije.
+
 ```
-src/test/java
-├── hr/ferit/framework
-│   ├── core           # BaseTest, DriverFactory, Wait helpers
-│   ├── pages          # Page Object Model klase
-│   └── tests          # UI testovi
-└── hr/ferit/framework/api
-    ├── core           # API base konfiguracija
-    └── tests          # REST API testovi
+src
+├── main
+│   └── java
+│       ├── pages
+│       │   ├── base
+│       │   ├── elements
+│       │   └── forms
+│       ├── utils
+│       │   ├── WaitUtil
+│       │   ├── DriverFactory
+│       │   └── ConfigLoader
+│       └── listeners
+│           ├── RetryAnalyzer
+│           └── RetryListener
+├── test
+│   └── java
+│       └── tests
+│           ├── elements
+│           └── forms
+└── resources
+    └── testng.xml
 ```
 
 ---
 
-## Implementirane tehnike i koncepti
+## Ključne značajke frameworka
 
-### UI testiranje (LV2)
+### Page Object Model
 
-- Selenium WebDriver
-- **Page Object Model (POM)**
-- **Explicit wait naredbe**
-- Cross-browser testiranje (Chrome/Chromium, Firefox)
-- Headless izvođenje testova
-- Objektno-orijentirani pristup (BaseTest, DriverFactory)
+- jasna podjela između testova i UI logike
+- jednostavno održavanje i proširivanje testova
 
-**Testirana aplikacija:**
-- https://the-internet.herokuapp.com
+### Explicit waits
 
-**Primjeri testova:**
-- Login (uspješan i neuspješni scenariji)
-- Rad s checkbox elementima
-- Dinamičko učitavanje sadržaja
+- implicit waits su isključeni
+- sva čekanja su centralizirana kroz `WaitUtil`
+- koristi se čekanje na vidljivost, prisutnost i tekst elemenata
 
----
+### Retry mehanizam
 
-### REST API testiranje (LV3)
+- implementiran pomoću TestNG `RetryAnalyzer` i `RetryListener`
+- omogućuje automatsko ponovno izvođenje flaky testova
+- retry je konfiguriran globalno, bez potrebe za anotacijama na svakom testu
 
-- REST Assured
-- TestNG
-- Data-driven testiranje (`@DataProvider`)
-- CRUD operacije (GET, POST, PUT, DELETE)
+### Safe open mehanizam
 
-**Testirani API:**
-- https://jsonplaceholder.typicode.com
+- stranice se otvaraju kroz sigurnu metodu (`safeOpen`)
+- omogćuje retry u slučaju privremenog network problema
+- smanjuje broj lažnih padova testova
 
-**Primjeri testova:**
-- Dohvat resursa (GET)
-- Kreiranje resursa (POST)
-- Ažuriranje resursa (PUT)
-- Brisanje resursa (DELETE)
+### Cross-browser podrška
 
----
-
-### Ručno testiranje (LV1)
-
-Prije automatizacije definirani su osnovni ručni testni slučajevi (login, validacija unosa), a odabrani scenariji automatizirani su zbog:
-- čestog izvođenja
-- velike vjerojatnosti regresije
-- ponovljivosti
-
----
-
-### Kontinuirana integracija (CI)
-
-Projekt koristi **GitHub Actions** za kontinuiranu integraciju:
-- Testovi se automatski izvršavaju pri svakom `push` ili `pull request` događaju
-- Izvode se UI i API testovi
-- Generira se HTML test report
-
-**CI konfiguracija:**
-```
-.github/workflows/ci.yml
-```
+- Firefox (primarni)
+- Chromium (lokalno, ovisno o konfiguraciji)
+- podržan headless i non-headless način rada
 
 ---
 
 ## Pokretanje testova
 
-### Lokalno
+**Pokretanje svih testova (Firefox, headless):**
+
 ```bash
-mvn test
+mvn clean test -Dbrowser=firefox -Dheadless=true
 ```
 
-Pokretanje s Firefox preglednikom:
+**Pokretanje testova s vidljivim preglednikom:**
+
 ```bash
-mvn test -Dbrowser=firefox
+mvn clean test -Dbrowser=firefox -Dheadless=false
 ```
 
-Pokretanje u headless modu:
+**Pokretanje pojedine testne klase:**
+
 ```bash
-mvn test -Dheadless=true
+mvn -Dtest=PracticeFormTests test
 ```
 
-### Testni izvještaji
+**Pokretanje pojedinog testa:**
+
 ```bash
-mvn surefire-report:report
+mvn -Dtest=PracticeFormTests#happyPath_fullForm_shouldShowModal test
 ```
 
-Izvještaj se nalazi u:
-```
-target/site/surefire-report.html
-```
+### TestNG konfiguracija
+
+Testovi su grupirani pomoću TestNG grupa (npr. `smoke`, `regression`) i mogu se pokretati putem `testng.xml` datoteke, Maven komandi ili pojedinačno iz IDE-a.
 
 ---
+
+## Zaključak
+
+Ovaj projekt prikazuje realan primjer UI automatizacije nad nestabilnom demo aplikacijom. Fokus je stavljen na dobru arhitekturu testova, korištenje explicit waits mehanizama, upravljanje flaky testovima te realne probleme s kojima se susreće UI automatizacija.
+
+Cilj projekta nije forsirati savršenu stabilnost nad demo aplikacijom, već demonstrirati ispravne prakse automatiziranog testiranja.
+
+---
+
+## Autor
+
+**Nikola Iljazović**  
+GitHub: [niljazovic](https://github.com/niljazovic)
