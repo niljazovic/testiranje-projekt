@@ -134,6 +134,7 @@ Projekt je implementiran prema Page Object Model (POM) arhitekturnom obrascu, č
 
 - jasna podjela između testova i UI logike
 - jednostavno održavanje i proširivanje testova
+- poštivanje objektno-orijentiranih (OOP) načela
 
 ### Explicit waits
 
@@ -145,11 +146,11 @@ Projekt je implementiran prema Page Object Model (POM) arhitekturnom obrascu, č
 
 - implementiran pomoću TestNG `RetryAnalyzer` i `RetryListener`
 - omogućuje automatsko ponovno izvođenje flaky testova
-- retry je konfiguriran globalno, bez potrebe za anotacijama na svakom testu
+- retry je konfiguriran globalno
 
 ### Safe open mehanizam
 
-- stranice se otvaraju kroz sigurnu metodu (`safeOpen`)
+- stranice se otvaraju koristeći sigurnu metodu (`safeGet`)
 - omogćuje retry u slučaju privremenog network problema
 - smanjuje broj lažnih padova testova
 
@@ -195,7 +196,7 @@ Testovi su grupirani pomoću TestNG grupa (npr. `smoke`, `regression`) i mogu se
 
 ## Zaključak
 
-Ovaj projekt prikazuje realan primjer UI automatizacije nad nestabilnom demo aplikacijom. Fokus je stavljen na dobru arhitekturu testova, korištenje explicit waits mehanizama, upravljanje flaky testovima te realne probleme s kojima se susreće UI automatizacija.
+Ovaj projekt prikazuje primjer UI automatizacije nad nestabilnom demo aplikacijom. Fokus je stavljen na dobru arhitekturu testova, korištenje explicit waits mehanizama, upravljanje flaky testovima te realne probleme s kojima se susreće UI automatizacija.
 
 Cilj projekta nije forsirati savršenu stabilnost nad demo aplikacijom, već demonstrirati ispravne prakse automatiziranog testiranja.
 
