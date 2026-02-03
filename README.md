@@ -43,27 +43,87 @@ Ovo ponašanje je očekivano za demo aplikaciju i nije pokazatelj loše implemen
 Projekt je implementiran prema Page Object Model (POM) arhitekturnom obrascu, čime se odvaja testna logika od UI implementacije.
 
 ```
-src
-├── main
-│   └── java
-│       ├── pages
-│       │   ├── base
-│       │   ├── elements
-│       │   └── forms
-│       ├── utils
-│       │   ├── WaitUtil
-│       │   ├── DriverFactory
-│       │   └── ConfigLoader
-│       └── listeners
-│           ├── RetryAnalyzer
-│           └── RetryListener
-├── test
-│   └── java
-│       └── tests
-│           ├── elements
-│           └── forms
-└── resources
-    └── testng.xml
+│
+├── .github
+│ └── workflows
+│ └── ci.yml
+│
+├── src
+│ ├── main
+│ │ └── java
+│ │ ├── config
+│ │ │ ├── Config.java
+│ │ │ └── ConfigLoader.java
+│ │ │
+│ │ ├── driver
+│ │ │ ├── BrowserType.java
+│ │ │ └── DriverFactory.java
+│ │ │
+│ │ ├── pages
+│ │ │ ├── base
+│ │ │ │ └── BasePage.java
+│ │ │ │
+│ │ │ ├── alerts
+│ │ │ │ ├── AlertsPage.java
+│ │ │ │ ├── BrowserWindowsPage.java
+│ │ │ │ └── FramesPage.java
+│ │ │ │
+│ │ │ ├── elements
+│ │ │ │ ├── ButtonsPage.java
+│ │ │ │ ├── CheckBoxPage.java
+│ │ │ │ ├── LinksPage.java
+│ │ │ │ ├── RadioButtonPage.java
+│ │ │ │ ├── TextBoxPage.java
+│ │ │ │ └── WebTablesPage.java
+│ │ │ │
+│ │ │ ├── forms
+│ │ │ │ └── PracticeFormPage.java
+│ │ │ │
+│ │ │ └── upload
+│ │ │ └── UploadDownloadPage.java
+│ │ │
+│ │ └── utils
+│ │ └── WaitUtil.java
+│ │
+│ └── resources
+│
+├── src
+│ └── test
+│ └── java
+│ ├── listeners
+│ │ ├── RetryAnalyzer.java
+│ │ └── RetryListener.java
+│ │
+│ ├── tests
+│ │ ├── base
+│ │ │ └── BaseTest.java
+│ │ │
+│ │ ├── alerts
+│ │ │ ├── AlertsTests.java
+│ │ │ ├── BrowserWindowsTests.java
+│ │ │ └── FramesTests.java
+│ │ │
+│ │ ├── elements
+│ │ │ ├── ButtonsTests.java
+│ │ │ ├── CheckBoxTests.java
+│ │ │ ├── LinksTests.java
+│ │ │ ├── RadioButtonTests.java
+│ │ │ ├── TextBoxTests.java
+│ │ │ └── WebTablesTests.java
+│ │ │
+│ │ ├── forms
+│ │ │ └── PracticeFormTests.java
+│ │ │
+│ │ └── upload
+│ │ └── UploadDownloadTests.java
+│ │
+│ └── resources
+│ ├── config.properties
+│ └── log4j.properties
+│
+├── testng.xml
+├── pom.xml
+└── README.md
 ```
 
 ---
