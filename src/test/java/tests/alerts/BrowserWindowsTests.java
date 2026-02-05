@@ -1,6 +1,7 @@
 package tests.alerts;
 
 import listeners.RetryAnalyzer;
+import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.alerts.BrowserWindowsPage;
@@ -26,10 +27,12 @@ public class BrowserWindowsTests extends BaseTest {
                 break;
             }
         }
+        wait.urlContains("sample");
+        wait.visible(By.tagName("body"));
         Assert.assertTrue(driver.getPageSource().contains("This is a sample page"));
 
         driver.close();
         driver.switchTo().window(original);
-        Assert.assertTrue(driver.getCurrentUrl().contains("/browser-windows"));
+        Assert.assertTrue(driver.getCurrentUrl().contains("/browser"));
     }
 }

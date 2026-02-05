@@ -46,5 +46,9 @@ public class WaitUtil {
     public void untilTextPresent(By by, String text) {
         wait.until(ExpectedConditions.textToBePresentInElementLocated(by, text));
     }
+    public void pageSourceContains(String text) {
+        wait.until(driver -> driver.getPageSource().contains(text));
+    }
+
 
 }
